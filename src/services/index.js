@@ -4,11 +4,11 @@ import * as SecureStore from 'expo-secure-store';
 import { Toast } from "toastify-react-native";
 
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL
+    baseURL: process.env.EXPO_PUBLIC_API_URL
 })
 
 const chatInstance = axios.create({
-    baseURL: process.env.REACT_APP_CHAT_API_URL
+    baseURL: process.env.EXPO_PUBLIC_CHAT_API_URL
 })
 
 const errorHandler = (error) => {
@@ -27,6 +27,7 @@ instance.interceptors.response.use(
 instance.interceptors.request.use(
 	async config => {
 			const token = await SecureStore.getItemAsync('token')
+			console.log(token);
 			if (!config.headers.Authorization) {
 					config.headers.Authorization = `Bearer ${token}`;
 			}
@@ -35,15 +36,12 @@ instance.interceptors.request.use(
 )
 
 const refreshAuthLogic = async failedRequest => {
-	const refresh = await SecureStore.getItemAsync("refresh_token")
-	instance.post('/auth/refresh', {"refresh_token": refresh}).then(async (tokenRefreshResponse) => {
-			await SecureStore.setItemAsync('token', tokenRefreshResponse.data.token)
-			failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.token;
+	instance.post('/api/refresh').then(async (tokenRefreshResponse) => {
+			await SecureStore.setItemAsync('token', tokenRefreshResponse.data.authorisation.token)
+			failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.authorisation.token;
 			return Promise.resolve();
 	}).catch(err => {
 			SecureStore.deleteItemAsync('token', null)
-			SecureStore.deleteItemAsync('refresh_token', null)
-			console.log('err', err);
 	})
 };
 
@@ -51,7 +49,9 @@ createAuthRefreshInterceptor(instance, refreshAuthLogic, {statusCodes: [401, 403
 
 export const auth = {
 	login(loginPayload) {
-		return instance.post("/api/login", loginPayload)
+		return instance.post("/api/login", loginPayload).then(async (res) => {
+			await SecureStore.setItemAsync('token', res.data.authorisation.token)
+		})
 	},
 	loginVk(loginPayload) {
 		return instance.post("/api/login/vk", loginPayload)
