@@ -6,7 +6,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { QueryClient } from '@tanstack/react-query';
 import { AppContainer } from './src/components/AppContainer';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { View } from 'react-native';
+import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 
 const defaultErrorHandler = ErrorUtils.getGlobalHandler()
 
@@ -52,10 +52,12 @@ export default function App() {
  
   return (
 		<QueryClientProvider client={queryClient}>
-				<ActionSheetProvider>
+			<ActionSheetProvider>
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 					<AppContainer/>
-				</ActionSheetProvider>
-				<View onLayout={onLayoutRootView}></View>
-			</QueryClientProvider>
+				</TouchableWithoutFeedback>
+			</ActionSheetProvider>
+			<View onLayout={onLayoutRootView}></View>
+		</QueryClientProvider>
   );
 }

@@ -7,10 +7,6 @@ const instance = axios.create({
     baseURL: process.env.EXPO_PUBLIC_API_URL
 })
 
-const chatInstance = axios.create({
-    baseURL: process.env.EXPO_PUBLIC_CHAT_API_URL
-})
-
 const errorHandler = (error) => {
 	if(error?.response?.status && error?.response?.status !== 403 && error?.response?.status !== 404){
 		Toast.error(`${error?.response?.data?.message || 'Возникла ошибка'}`);  
@@ -27,7 +23,6 @@ instance.interceptors.response.use(
 instance.interceptors.request.use(
 	async config => {
 			const token = await SecureStore.getItemAsync('token')
-			console.log(token);
 			if (!config.headers.Authorization) {
 					config.headers.Authorization = `Bearer ${token}`;
 			}
@@ -77,12 +72,11 @@ export const profile = {
 	updateProfileAvatar(data) {
 		const formData = new FormData()
 		formData.append('avatar', data);
-	
 		return instance.post('/api/profile/update-avatar', formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
 			}
-		});
+		})
 	},
 	updateProfile(data) {
 		return instance.post("/api/profile/update", {...data})
@@ -158,9 +152,6 @@ export const classes = {
 }
 
 export const chat = {
-	getAllChats() {
-		return chatInstance.get('/v1/chats')
-	},
 	postAttachment(data, options) {
 		const onProgress = options?.onProgress;
 

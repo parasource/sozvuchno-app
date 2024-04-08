@@ -25,6 +25,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+		"plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow СОЗВУЧНО to access your photos",
+					"cameraPermission": "Allow СОЗВУЧНО to access your camera",
+					"microphonePermission": "Allow СОЗВУЧНО to access your microphone"
+        }
+      ]
+    ]
   }
 }

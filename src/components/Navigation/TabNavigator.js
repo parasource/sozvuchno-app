@@ -1,49 +1,42 @@
 import { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 
 import { PRIMARY_MAIN, TEXT_PRIMARY } from '../../consts/theme';
-import { IconBook, IconHome, IconSearch, IconUser } from '@tabler/icons-react-native';
+import { IconBook, IconHistory, IconHome, IconMessage, IconSearch, IconUser } from '@tabler/icons-react-native';
+import { useProfile } from '../../hooks/useProfile';
+import { Profile } from '../../pages/Profile/Profile';
 
 const Tab = createBottomTabNavigator()
 
 export const TabBottomNavigator = () => {
   const [onTop, setOnTop] = useState(null)
+	const {data: profile} = useProfile()
 
   return(
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let icon;
-          let title;
-          if (route.name === "Home") {
-            icon = <IconHome style={{color: PRIMARY_MAIN, opacity: focused ? 1.0 : 0.8}}/>;
-            title = "Главная"
-          } else if (route.name === "Search") {
-            icon = <IconSearch style={{color: PRIMARY_MAIN, opacity: focused ? 1.0 : 0.8}}/>;
-            title = "Поиск"
-          } else if (route.name === "Favorites") {
-            icon = <IconBook style={{color: PRIMARY_MAIN, opacity: focused ? 1.0 : 0.8}}/>;
-            title = "Избранное"
-          } else if (route.name === "Profile") {
-            icon = <IconUser style={{color: PRIMARY_MAIN, opacity: focused ? 1.0 : 0.8}}/>;
-            title = "Профиль"
-          }
+        tabBarIcon: ({ focused }) => {
           return (
             <Pressable style={{justifyContent: 'center', alignItems: 'center'}} 
-            onPress={() => {
-              let history = navigation.getState().history
-              if(title === "Главная" && history.length === 1){
-                if(onTop === 1) setOnTop(2)
-                else setOnTop(1)
-              }else if(title === "Поиск"){
-                navigation.navigate(route.name, {isFocused: false})
-              }
-              navigation.navigate(route.name)
-            }}
-            >
-							{icon}
+            onPress={() => navigation.navigate(route.name)}>
+							{{'Home': <>
+								<IconHome style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
+								<Text>Главная</Text>
+							</>,
+							'Messenger': <>
+								<IconMessage style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
+								<Text>Сообщения</Text>
+							</>,
+							'History': <>
+								<IconHistory style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
+								<Text>История</Text>
+							</>,
+							'Profile': <>
+								<IconUser style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
+								<Text>Профиль</Text>
+							</>}[route.name]}
             </Pressable>
           )
         },
@@ -63,17 +56,17 @@ export const TabBottomNavigator = () => {
 					name="Home" 
 					component={View}/>
         <Tab.Screen
-          name="Search"
+          name="Messenger"
           component={View}
           screenOptions={{tabBarHideOnKeyboard: true}}
         />
         <Tab.Screen
-          name="Favorites"
+          name="History"
           component={View}
         />
         <Tab.Screen
           name="Profile"
-          component={View}
+          component={Profile}
         />
     </Tab.Navigator>
   )

@@ -19,4 +19,4 @@ export const SUCCESS_LIGHT = '#3BCC4A';
 export const TEXT_PRIMARY = '#000000';
 export const TEXT_SECONDARY = '#888888';
 export const SECONDARY_PRIMARY = '#A7AEB8';
-export const SECONDARY_PRIMARY_20 = 'rgba(#A7AEB8, .2)'
+export const SECONDARY_PRIMARY_20 = '#A7AEB833'

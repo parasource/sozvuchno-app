@@ -42,7 +42,9 @@
     "react-native-screens": "~3.29.0",
     "react-native-shared-element": "^0.8.9",
     "react-native-svg": "^15.1.0",
-    "toastify-react-native": "^5.0.0"
+    "toastify-react-native": "^5.0.0",
+    "expo-image-picker": "~14.7.1",
+    "expo-file-system": "~16.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

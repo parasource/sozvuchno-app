@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react'
-import { StatusBar } from 'react-native';
+import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import * as StoreReview from 'expo-store-review';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabBottomNavigator } from './Navigation/TabNavigator';
 import { FirstScreen } from '../pages/FirstScreen';
 import { useProfile } from '../hooks/useProfile';
-import { PRIMARY_CONTRAST, TEXT_PRIMARY } from '../consts/theme';
+import { PRIMARY_CONTRAST, PRIMARY_MAIN, TEXT_PRIMARY } from '../consts/theme';
 import { LoginPage } from '../pages/auth/LoginPage';
+import ToastManager from 'toastify-react-native';
 
 const Stack = createNativeStackNavigator()
 
 export const AppContainer = () => {
-	const {data: profile} = useProfile()
+	const {data: profile, isFetched} = useProfile()
 
   const MyTheme = {
 		...DefaultTheme,
@@ -24,9 +24,14 @@ export const AppContainer = () => {
       text: TEXT_PRIMARY,
     },
   };
+	
+	if(!isFetched){
+		return <ActivityIndicator color={PRIMARY_MAIN}/>
+	}
 
   return (
 		<SafeAreaProvider>
+			<ToastManager/>
 			<StatusBar barStyle="dark-content"/>
 			<NavigationContainer theme={MyTheme}>
 				{profile ?
