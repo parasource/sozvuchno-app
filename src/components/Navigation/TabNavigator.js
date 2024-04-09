@@ -7,6 +7,7 @@ import { PRIMARY_MAIN, SECONDARY_PRIMARY_20, TEXT_PRIMARY, TEXT_SECONDARY } from
 import { IconBook, IconHistory, IconHome, IconMessage, IconSearch, IconUser } from '@tabler/icons-react-native';
 import { useProfile } from '../../hooks/useProfile';
 import { Profile } from '../../pages/Profile/Profile';
+import { Home } from '../../pages/Studint/Home/Home';
 
 const Tab = createBottomTabNavigator()
 
@@ -52,7 +53,7 @@ export const TabBottomNavigator = () => {
     >
         <Tab.Screen 
 					name="Home" 
-					component={View}/>
+					component={Home}/>
         <Tab.Screen
           name="Messenger"
           component={View}

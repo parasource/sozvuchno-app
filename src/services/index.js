@@ -119,6 +119,9 @@ export const classes = {
 	getClassTokenById(id) {
 		return instance.get(`/api/appointments/${id}/join-token`)
 	},
+	getUpcomingClasses() {
+		return instance.get('/api/appointments/upcoming')
+	},
 	getAllClasses() {
 		return instance.get('/api/appointments')
 	},

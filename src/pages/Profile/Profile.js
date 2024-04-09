@@ -14,14 +14,9 @@ import * as SecureStore from 'expo-secure-store';
 import { NotificationSetting } from '../../components/Shared/NotificationSettings/NotificationSetting';
 
 export const Profile = () => {
-	const inset = useSafeAreaInsets()
 	const {data: profile, refetch} = useProfile()
 	const {mutate: updateProfileAvatar} = useUpdateProfileAvatar()
 	const { showActionSheetWithOptions } = useActionSheet();
-
-	const onClose = () => {
-		setImage(null)
-	}
 
 	const onSave = async (image) => {
 		if(image){
@@ -86,8 +81,6 @@ export const Profile = () => {
           break;
 
         case cancelButtonIndex:
-					onClose()
-
       }});
   }
 
