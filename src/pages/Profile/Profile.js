@@ -3,18 +3,19 @@ import { StyleSheet, Text, View, Image, TouchableHighlight, ScrollView } from 'r
 import { SettingsForm } from '../../components/Shared/SettingsForm/SettingsForm'
 import { useProfile } from '../../hooks/useProfile'
 import { useUpdateProfileAvatar } from '../../hooks/useUpdateProfileAvatar';
-import { PRIMARY_MAIN, SECONDARY_PRIMARY, SECONDARY_PRIMARY_20 } from '../../consts/theme'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SECONDARY_PRIMARY, SECONDARY_PRIMARY_20 } from '../../consts/theme'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { IconEdit } from '@tabler/icons-react-native'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import { RecyclerViewBackedScrollView } from 'react-native';
+import { Button } from '../../components/Shared/Button/Button';
+import { auth } from '../../services';
+import * as SecureStore from 'expo-secure-store';
+import { NotificationSetting } from '../../components/Shared/NotificationSettings/NotificationSetting';
 
 export const Profile = () => {
 	const inset = useSafeAreaInsets()
-	const {data: profile} = useProfile()
+	const {data: profile, refetch} = useProfile()
 	const {mutate: updateProfileAvatar} = useUpdateProfileAvatar()
 	const { showActionSheetWithOptions } = useActionSheet();
 
@@ -90,21 +91,32 @@ export const Profile = () => {
       }});
   }
 
+	const logout = async () => {
+		await SecureStore.deleteItemAsync('token', null)
+		refetch()
+	}
+
 	return (
-		<ScrollView style={{paddingHorizontal: 16, paddingTop: inset.top + 40}}>
-			<View style={s.profile}>
-				<View style={s.avatar}>
-					<TouchableHighlight style={s.edit} onPress={openActionSheet}>
-						<Image style={s.avatarImage} source={{uri: profile?.avatar ? process.env.EXPO_PUBLIC_STORAGE_URL + profile?.avatar?.image : '../../../assets/images/default_avatar.png'}}/>
-					</TouchableHighlight>
+		<SafeAreaView>
+			<ScrollView>
+				<View style={{paddingHorizontal: 16, paddingTop: 40, paddingBottom: 100}}>
+					<View style={s.profile}>
+						<View style={s.avatar}>
+							<TouchableHighlight style={s.edit} onPress={openActionSheet}>
+								<Image style={s.avatarImage} source={{uri: profile?.avatar ? process.env.EXPO_PUBLIC_STORAGE_URL + profile?.avatar?.image : '../../../assets/images/default_avatar.png'}}/>
+							</TouchableHighlight>
+						</View>
+						<View style={s.profileContent}>
+							<Text style={s.name}>{profile?.name}</Text>
+							<Text style={s.role}>{profile?.email}</Text>
+						</View>
+					</View>
+					<SettingsForm/>
+					<NotificationSetting/>
+					<Button label={'Выйти'} theme='light' pressHandler={logout}/>
 				</View>
-				<View style={s.profileContent}>
-					<Text style={s.name}>{profile?.name}</Text>
-					<Text style={s.role}>{profile?.email}</Text>
-				</View>
-			</View>
-			<SettingsForm/>
-		</ScrollView>
+			</ScrollView>
+		</SafeAreaView>
 	)
 }
 

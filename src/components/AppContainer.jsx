@@ -14,7 +14,7 @@ import ToastManager from 'toastify-react-native';
 const Stack = createNativeStackNavigator()
 
 export const AppContainer = () => {
-	const {data: profile, isFetched} = useProfile()
+	const {data: profile, isLoading} = useProfile()
 
   const MyTheme = {
 		...DefaultTheme,
@@ -25,14 +25,14 @@ export const AppContainer = () => {
     },
   };
 	
-	if(!isFetched){
-		return <ActivityIndicator color={PRIMARY_MAIN}/>
+	if(isLoading){
+		return <ActivityIndicator color={PRIMARY_MAIN} style={{flex: 1}}/>
 	}
 
   return (
 		<SafeAreaProvider>
-			<ToastManager/>
 			<StatusBar barStyle="dark-content"/>
+			<ToastManager/>
 			<NavigationContainer theme={MyTheme}>
 				{profile ?
 					<Stack.Navigator

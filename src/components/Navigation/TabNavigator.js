@@ -3,12 +3,21 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 
-import { PRIMARY_MAIN, TEXT_PRIMARY } from '../../consts/theme';
+import { PRIMARY_MAIN, SECONDARY_PRIMARY_20, TEXT_PRIMARY, TEXT_SECONDARY } from '../../consts/theme';
 import { IconBook, IconHistory, IconHome, IconMessage, IconSearch, IconUser } from '@tabler/icons-react-native';
 import { useProfile } from '../../hooks/useProfile';
 import { Profile } from '../../pages/Profile/Profile';
 
 const Tab = createBottomTabNavigator()
+
+const Item = ({focused, Icon, name}) => {
+	return (
+		<View style={{...styles.item, backgroundColor: focused ? 'rgba(167, 174, 184, 0.20)' : ''}}>
+			<Icon color={focused ? TEXT_PRIMARY : TEXT_SECONDARY}/>
+			<Text style={styles.itemText}>{name}</Text>
+		</View>
+	)
+}
 
 export const TabBottomNavigator = () => {
   const [onTop, setOnTop] = useState(null)
@@ -21,22 +30,11 @@ export const TabBottomNavigator = () => {
           return (
             <Pressable style={{justifyContent: 'center', alignItems: 'center'}} 
             onPress={() => navigation.navigate(route.name)}>
-							{{'Home': <>
-								<IconHome style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
-								<Text>Главная</Text>
-							</>,
-							'Messenger': <>
-								<IconMessage style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
-								<Text>Сообщения</Text>
-							</>,
-							'History': <>
-								<IconHistory style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
-								<Text>История</Text>
-							</>,
-							'Profile': <>
-								<IconUser style={{opacity: focused ? 1 : .8}} color={PRIMARY_MAIN}/>
-								<Text>Профиль</Text>
-							</>}[route.name]}
+							{{'Home': <Item name={'Главная'} Icon={(props) => <IconHome {...props}/>} focused={focused}/>,
+							'Messenger': <Item name={'Сообщения'} Icon={(props) => <IconMessage {...props}/>} focused={focused}/>,
+							'History':   <Item name={'История'} Icon={(props) => <IconHistory {...props}/>} focused={focused}/>,
+							'Profile':  <Item name={'Профиль'} Icon={(props) => <IconUser {...props}/>} focused={focused}/>}
+							[route.name]}
             </Pressable>
           )
         },
@@ -74,13 +72,23 @@ export const TabBottomNavigator = () => {
 
 const styles = StyleSheet.create({
   tab: {
-    paddingVertical: 8,
-    minHeight: 60,
+    minHeight: 64,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    borderTopColor: '#666666',
+    borderTopColor: SECONDARY_PRIMARY_20,
     backgroundColor: 'transparent'
-  }
+  },
+	item: {
+		paddingVertical: 4,
+		paddingHorizontal: 8,
+		alignItems: 'center',
+		gap: 4,
+		borderRadius: 8,
+	},
+	itemText: {
+		fontSize: 10,
+		fontWeight: 500,
+	}
 })

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useProfile } from '../../../hooks/useProfile';
 import { useUpdateProfile } from '../../../hooks/useUpdateProfile';
@@ -8,6 +8,8 @@ import { Input } from '../Input/Input';
 import { ERROR_MAIN } from '../../../consts/theme';
 
 export const SettingsForm = () => {
+	const [isFormDirty, setIsFormDirty] = useState(false);
+
 	const {data: profile} = useProfile()
 	const {mutate: updateProfile} = useUpdateProfile()
 	
@@ -15,7 +17,13 @@ export const SettingsForm = () => {
 		defaultValues: {...profile, fname: profile.fname || '', lname: profile.lname || ''},
 		mode: "onChange"
 	})
-	const {control, formState} = methods
+
+	const {getValues, formState, watch: watchAllFields} = methods
+
+	useEffect(() => {
+		const isDirty = Object.keys(watchAllFields).some(key => watchAllFields[key] !== getValues()[key]);
+		setIsFormDirty(isDirty);
+	}, [watchAllFields, methods, profile]);
 
   const handleSubmit = methods.handleSubmit(data => {
 		const d = data?.bday ? new Date(data?.bday) : null	
@@ -33,15 +41,6 @@ export const SettingsForm = () => {
 		
 		updateProfile(payload)
   })
-
-	const newValues = () => {
-		const name = methods.watch('name').trim();
-		const fname = methods.watch('fname').trim();
-		const lname = methods.watch('lname').trim();
-		const email = methods.watch('email').trim();
-		const bday = methods.watch('bday')
-		return name !== profile.name || fname !== profile.fname || lname !== profile.lname || email !== profile.email || bday !== profile.bday
-	}
 
 	return (
 		<FormProvider {...methods}>
@@ -107,7 +106,7 @@ export const SettingsForm = () => {
 							},
 						},
 					}}/>
-					<Button label='Сохранить изменения' style={styles.button} disabled={(!formState.isValid && !formState.isDirty) || !newValues()  || formState.isSubmitting} pressHandler={handleSubmit}/>
+					<Button label='Сохранить изменения' style={styles.button} disabled={(!formState.isValid && formState.isDirty) || isFormDirty} pressHandler={handleSubmit}/>
 				</View>
 			</View>
 		</FormProvider>

@@ -13,12 +13,3 @@ export const useUpdateTimeSlots = () => {
 
 	return mutation
 }
-
-// {
-// 	"timeslots": [
-// 			{
-// 					"weekday": "monday",
-// 					"time": "09:00"
-// 			}
-// 	]
-// }
