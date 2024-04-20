@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { SECONDARY_PRIMARY, SECONDARY_PRIMARY_20, SUCCESS_MAIN } from '../../../consts/theme';
+import { useNavigation } from '@react-navigation/native';
 
 export const ClassCard = ({ teacher, starts_at, instrument, id }) => {
  const date = new Date(starts_at);
  const today = new Date();
+ const navigation = useNavigation()
 
  const isToday = date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
@@ -15,19 +17,17 @@ export const ClassCard = ({ teacher, starts_at, instrument, id }) => {
     'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
  ];
 
-//  const { setModal } = useContext(ModalsContext);
-
  return (
     <TouchableOpacity
       style={isToday ? styles.wrapperToday : styles.wrapper}
-      // onPress={() => setModal('appointment-modal-' + id)}
+      onPress={() => navigation.navigate('AppointmentPage', {appointmentId: id})}
     >
       <View style={styles.avatar}>
         <Image
           source={
             teacher.avatar
               ? { uri: process.env.EXPO_PUBLIC_STORAGE_URL + teacher.avatar.image }
-              : require('../../../../assets/images/default_avatar.png') // Убедитесь, что путь к изображению корректен
+              : require('../../../../assets/images/default_avatar.png')
           }
           style={styles.avatarImage}
         />

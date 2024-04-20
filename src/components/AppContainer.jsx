@@ -10,6 +10,7 @@ import { useProfile } from '../hooks/useProfile';
 import { PRIMARY_CONTRAST, PRIMARY_MAIN, TEXT_PRIMARY } from '../consts/theme';
 import { LoginPage } from '../pages/auth/LoginPage';
 import ToastManager from 'toastify-react-native';
+import { AppointmentPage } from '../pages/Appointment/AppointmentPage';
 
 const Stack = createNativeStackNavigator()
 
@@ -57,6 +58,11 @@ export const AppContainer = () => {
 									headerShown: false,
 								}}
 								component={TabBottomNavigator}
+							/>
+							<Stack.Screen
+								name='AppointmentPage'
+								options={{presentation: 'modal', title: 'Занятие'}}
+								component={AppointmentPage}	
 							/>
 					</Stack.Navigator>
 					:

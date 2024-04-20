@@ -3,9 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 
-import { PRIMARY_MAIN, SECONDARY_PRIMARY_20, TEXT_PRIMARY, TEXT_SECONDARY } from '../../consts/theme';
-import { IconBook, IconHistory, IconHome, IconMessage, IconSearch, IconUser } from '@tabler/icons-react-native';
-import { useProfile } from '../../hooks/useProfile';
+import { SECONDARY_PRIMARY_20, TEXT_PRIMARY, TEXT_SECONDARY } from '../../consts/theme';
+import { IconHistory, IconHome, IconMessage, IconUser } from '@tabler/icons-react-native';
 import { Profile } from '../../pages/Profile/Profile';
 import { Home } from '../../pages/Studint/Home/Home';
 
@@ -21,9 +20,6 @@ const Item = ({focused, Icon, name}) => {
 }
 
 export const TabBottomNavigator = () => {
-  const [onTop, setOnTop] = useState(null)
-	const {data: profile} = useProfile()
-
   return(
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
